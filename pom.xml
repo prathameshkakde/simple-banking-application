@@ -46,7 +46,7 @@
 
                 <configuration>
                     <mainClass>
-                        com.prathamesh.Main
+                        com.prathamesh.application.Main
                     </mainClass>
                 </configuration>
             </plugin>
