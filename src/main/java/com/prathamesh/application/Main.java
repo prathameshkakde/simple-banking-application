@@ -1,5 +1,6 @@
 package com.prathamesh.application;
 
+import com.prathamesh.model.Transaction;
 import com.prathamesh.service.BankingService;
 import com.prathamesh.model.Account;
 
@@ -35,33 +36,69 @@ public class Main extends Application {
 
         BankingService bankingService = new BankingService();
 
-        boolean firstAccount =
-                bankingService.createAccount(
-                        "prathamesh",
-                        "password123"
-                );
+        // Create account
+        bankingService.createAccount(
+                "prathamesh",
+                "password123"
+        );
 
-        boolean duplicateAccount =
-                bankingService.createAccount(
+        // Deposit money
+        boolean depositSuccessful =
+                bankingService.deposit(
                         "prathamesh",
-                        "anotherPassword"
+                        500
                 );
 
         System.out.println(
-                "First account created: " + firstAccount
+                "Deposit Successful: " +
+                        depositSuccessful
         );
+
+        // Valid withdrawal
+        boolean withdrawalSuccessful =
+                bankingService.withdraw(
+                        "prathamesh",
+                        200
+                );
 
         System.out.println(
-                "Duplicate account created: " + duplicateAccount
+                "Withdrawal Successful: " +
+                        withdrawalSuccessful
         );
 
+        // Attempt withdrawal larger than balance
+        boolean largeWithdrawal =
+                bankingService.withdraw(
+                        "prathamesh",
+                        1000
+                );
+
+        System.out.println(
+                "Large Withdrawal Successful: " +
+                        largeWithdrawal
+        );
+
+        // Display account information
         Account account =
                 bankingService.findAccountByUsername(
                         "prathamesh"
                 );
 
         System.out.println(
-                "Found account: " + account.getUsername()
+                "\nCurrent Balance: " +
+                        account.getBalance()
         );
+
+        System.out.println("\nTransaction History:");
+
+        for (Transaction transaction :
+                account.getTransactions()) {
+
+            System.out.println(
+                    transaction.getType() +
+                            " - " +
+                            transaction.getAmount()
+            );
+        }
     }
 }

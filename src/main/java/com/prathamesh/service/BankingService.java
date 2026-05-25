@@ -1,6 +1,7 @@
 package com.prathamesh.service;
 
 import com.prathamesh.model.Account;
+import com.prathamesh.model.Transaction;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,6 +55,12 @@ public class BankingService {
         return true;
     }
 
+    /**
+     * Finds account by username
+     *
+     * @param username
+     * @return
+     */
     public Account findAccountByUsername(String username) {
 
         for (Account account : accounts) {
@@ -62,5 +69,72 @@ public class BankingService {
             }
         }
         return null;
+    }
+
+    /**
+     * Validates login credentials
+     *
+     * @param username
+     * @param password
+     * @return
+     */
+    public boolean authenticate(String username, String password) {
+
+        Account account = findAccountByUsername(username);
+
+        if (account == null) {
+            return false;
+        }
+
+        return account.getPassword().equals(password);
+    }
+
+    public boolean deposit(String username, double amount) {
+
+        // Deposit amount must be positive
+        if (amount <= 0) {
+            return false;
+        }
+
+        Account account = findAccountByUsername(username);
+
+        if (account == null) {
+            return false;
+        }
+
+        // Update balance
+        account.setBalance(account.getBalance() + amount);
+
+        // Record transaction
+        account.addTransaction(new Transaction("Deposit", amount));
+
+        return true;
+    }
+
+    public boolean withdraw(String username, double amount) {
+
+        // Withdrawal amount must be positive
+        if (amount <= 0) {
+            return false;
+        }
+
+        Account account = findAccountByUsername(username);
+
+        if (account == null) {
+            return false;
+        }
+
+        // Check sufficient balance
+        if (account.getBalance() < amount) {
+            return false;
+        }
+
+        // Deduct amount
+        account.setBalance(account.getBalance() - amount);
+
+        // Record transaction
+        account.addTransaction(new Transaction("Withdraw", amount));
+
+        return true;
     }
 }
