@@ -4,6 +4,7 @@ import com.prathamesh.model.Transaction;
 import com.prathamesh.service.BankingService;
 import com.prathamesh.model.Account;
 
+import com.prathamesh.storage.FileStorageService;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
@@ -34,71 +35,20 @@ public class Main extends Application {
 
     public static void main(String[] args) {
 
-        BankingService bankingService = new BankingService();
+        FileStorageService fileStorageService =
+                new FileStorageService();
 
-        // Create account
-        bankingService.createAccount(
-                "prathamesh",
-                "password123"
-        );
-
-        // Deposit money
-        boolean depositSuccessful =
-                bankingService.deposit(
-                        "prathamesh",
-                        500
-                );
-
-        System.out.println(
-                "Deposit Successful: " +
-                        depositSuccessful
-        );
-
-        // Valid withdrawal
-        boolean withdrawalSuccessful =
-                bankingService.withdraw(
-                        "prathamesh",
-                        200
-                );
-
-        System.out.println(
-                "Withdrawal Successful: " +
-                        withdrawalSuccessful
-        );
-
-        // Attempt withdrawal larger than balance
-        boolean largeWithdrawal =
-                bankingService.withdraw(
-                        "prathamesh",
-                        1000
-                );
-
-        System.out.println(
-                "Large Withdrawal Successful: " +
-                        largeWithdrawal
-        );
-
-        // Display account information
         Account account =
-                bankingService.findAccountByUsername(
-                        "prathamesh"
+                new Account(
+                        "prathamesh",
+                        "password123",
+                        300.0
                 );
 
+        fileStorageService.saveAccount(account);
+
         System.out.println(
-                "\nCurrent Balance: " +
-                        account.getBalance()
+                "Account saved successfully."
         );
-
-        System.out.println("\nTransaction History:");
-
-        for (Transaction transaction :
-                account.getTransactions()) {
-
-            System.out.println(
-                    transaction.getType() +
-                            " - " +
-                            transaction.getAmount()
-            );
-        }
     }
 }

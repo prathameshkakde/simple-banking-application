@@ -89,6 +89,13 @@ public class BankingService {
         return account.getPassword().equals(password);
     }
 
+    /**
+     * Deposits money into an account.
+     *
+     * @param username account username
+     * @param amount amount to deposit
+     * @return true if successful, false otherwise
+     */
     public boolean deposit(String username, double amount) {
 
         // Deposit amount must be positive
@@ -111,6 +118,13 @@ public class BankingService {
         return true;
     }
 
+    /**
+     * Withdraws money from an account.
+     *
+     * @param username account username
+     * @param amount amount to withdraw
+     * @return true if successful, false otherwise
+     */
     public boolean withdraw(String username, double amount) {
 
         // Withdrawal amount must be positive

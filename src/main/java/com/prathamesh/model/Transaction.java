@@ -1,5 +1,7 @@
 package com.prathamesh.model;
 
+import java.time.LocalDateTime;
+
 /**
  * Represents a banking transaction.
  */
@@ -11,6 +13,9 @@ public class Transaction {
     // Amount involved in the transaction
     private double amount;
 
+    // Date and time when transaction occurred
+    private LocalDateTime timestamp;
+
     /**
      * Creates a new transaction
      *
@@ -20,6 +25,9 @@ public class Transaction {
     public Transaction(String type, double amount) {
         this.type = type;
         this.amount = amount;
+
+        // Automatically store current date and time
+        this.timestamp = LocalDateTime.now();
     }
 
     // Getter for type
@@ -40,5 +48,12 @@ public class Transaction {
     // Setter for amount
     public void setAmount(double amount) {
         this.amount = amount;
+    }
+
+    /**
+     * @return transaction timestamp
+     */
+    public LocalDateTime getTimestamp() {
+        return timestamp;
     }
 }
