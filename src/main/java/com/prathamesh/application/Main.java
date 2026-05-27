@@ -38,6 +38,7 @@ public class Main extends Application {
         FileStorageService fileStorageService =
                 new FileStorageService();
 
+        // Create sample account
         Account account =
                 new Account(
                         "prathamesh",
@@ -45,10 +46,18 @@ public class Main extends Application {
                         300.0
                 );
 
+        // Save account
         fileStorageService.saveAccount(account);
 
         System.out.println(
-                "Account saved successfully."
+                "Account saved.\n"
         );
+
+        // Load accounts from file
+        System.out.println(
+                "Loading accounts from file:"
+        );
+
+        fileStorageService.loadAccounts();
     }
 }

@@ -2,6 +2,8 @@ package com.prathamesh.storage;
 
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.BufferedReader;
+import java.io.FileReader;
 import com.prathamesh.model.Account;
 
 /**
@@ -53,6 +55,68 @@ public class FileStorageService {
                             + System.lineSeparator()
             );
 
+        } catch (IOException exception) {
+
+            exception.printStackTrace();
+        }
+    }
+
+    /**
+     * Reads and prints all lines from the storage file.
+     */
+    public void readTestData() {
+
+        try (BufferedReader reader =
+                new BufferedReader(
+                        new FileReader(
+                                "data/accounts.txt"
+                        ))) {
+
+            String  line;
+
+            while ((line = reader.readLine()) != null) {
+
+                System.out.println(line);
+            }
+
+        } catch (IOException exception) {
+
+            exception.printStackTrace();
+        }
+    }
+
+    /**
+     * Loads and prints account objects
+     * from the storage file.
+     */
+    public void loadAccounts() {
+
+        try (BufferedReader reader =
+                new BufferedReader(
+                        new FileReader(
+                                "data/accounts.txt"
+                        ))) {
+
+            String  line;
+
+            while ((line = reader.readLine()) != null) {
+
+                // Split csv data
+                String[] parts = line.split(",");
+
+                // Extract values
+                String username = parts[0];
+                String password = parts[1];
+
+                // Convert String to double
+                double balance = Double.parseDouble(parts[2]);
+
+                // Create Account object
+                Account account = new Account(username, password, balance);
+
+                // Display loaded account
+                System.out.println("Loaded Account -> " + account.getUsername() + ", Balance: " + account.getBalance());
+            }
         } catch (IOException exception) {
 
             exception.printStackTrace();
