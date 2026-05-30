@@ -1,6 +1,7 @@
 package com.prathamesh.application;
 
-import com.prathamesh.ui.RegisterView;
+import com.prathamesh.ui.LoginView;
+import com.prathamesh.service.BankingService;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -13,11 +14,14 @@ public class Main extends Application {
     @Override
     public void start(Stage stage) {
 
+        // Shared banking service
+        BankingService bankingService = new BankingService();
+
         // Create login screen
-        RegisterView registerView = new RegisterView();
+        LoginView loginView = new LoginView(bankingService, stage);
 
         // Create scene
-        Scene scene = new Scene(registerView, 400, 300);
+        Scene scene = new Scene(loginView, 400, 300);
 
         // Configure stage
         stage.setTitle("Simple Banking Application");

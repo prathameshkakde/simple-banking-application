@@ -10,19 +10,25 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
+import javafx.stage.Stage;
+import javafx.scene.Scene;
 
 /**
  * Represents the registration screen UI.
  */
 public class RegisterView extends VBox {
 
+    private final BankingService bankingService;
+
+    private final Stage stage;
+
     /**
      * Creates the registration screen.
      */
-    public RegisterView(){
+    public RegisterView(BankingService bankingService, Stage stage) {
 
-        // Banking service instance
-        BankingService bankingService = new BankingService();
+        this.bankingService = bankingService;
+        this.stage = stage;
 
         // Title
         Label titleLabel = new Label("Create a New Account");
@@ -74,12 +80,37 @@ public class RegisterView extends VBox {
             }
         });
 
+        // Navigate back to login screen
+        Button backToLoginButton = new Button("Back to Login");
+        backToLoginButton.setPrefWidth(250);
+
+        // Navigate back to login screen
+        backToLoginButton.setOnAction(event -> {
+
+            LoginView loginView =
+                    new LoginView(
+                            bankingService,
+                            stage
+                    );
+
+            Scene loginScene =
+                    new Scene(
+                            loginView,
+                            400,
+                            300
+                    );
+
+            stage.setScene(
+                    loginScene
+            );
+        });
+
         // Layout configuration
         setSpacing(15);
         setPadding(new Insets(20));
         setAlignment(Pos.CENTER);
 
         // Add components
-        getChildren().addAll(titleLabel,usernameField,passwordField,registerButton, messageLabel);
+        getChildren().addAll(titleLabel,usernameField,passwordField,registerButton, backToLoginButton, messageLabel);
     }
 }

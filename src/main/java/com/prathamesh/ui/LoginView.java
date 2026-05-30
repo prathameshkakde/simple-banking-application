@@ -1,6 +1,7 @@
 package com.prathamesh.ui;
 
 import com.prathamesh.service.BankingService;
+import com.prathamesh.ui.RegisterView;
 
 import javafx.scene.layout.VBox;
 import javafx.geometry.Pos;
@@ -10,22 +11,25 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
 
 /**
  * Represents the login screen UI.
  */
 public class LoginView extends VBox {
 
+    private final  BankingService bankingService;
+
+    private final Stage stage;
+
     /**
      * Creates the login screen.
      */
-    public LoginView() {
+    public LoginView(BankingService bankingService, Stage stage) {
 
-        // Banking service instance
-        BankingService bankingService = new BankingService();
-
-        // Create sample account for testing
-        bankingService.createAccount("prathamesh", "password123");
+        this.bankingService = bankingService;
+        this.stage = stage;
 
         // Create title label
         Label title = new Label("Simple Banking Application");
@@ -65,6 +69,20 @@ public class LoginView extends VBox {
             }
         });
 
+        // Navigate to registration screen
+        Button createAccountButton = new Button("Create Account");
+        createAccountButton.setPrefWidth(250);
+
+        // Navigate to registration screen
+        createAccountButton.setOnAction(event -> {
+
+            RegisterView registerView = new RegisterView(bankingService, stage);
+
+            Scene registerScene = new Scene(registerView, 400, 300);
+
+            stage.setScene(registerScene);
+        });
+
         // Configure layout spacing
         setSpacing(15);
         setPadding(new Insets(20));
@@ -73,6 +91,6 @@ public class LoginView extends VBox {
         setAlignment(Pos.CENTER);
 
         // Add all components to VBox
-        getChildren().addAll(title, usernameField, passwordField, loginButton, messageLabel);
+        getChildren().addAll(title, usernameField, passwordField, loginButton, createAccountButton, messageLabel);
     }
 }
