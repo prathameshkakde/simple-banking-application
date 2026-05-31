@@ -1,7 +1,6 @@
 package com.prathamesh.ui;
 
 import com.prathamesh.service.BankingService;
-import com.prathamesh.ui.RegisterView;
 
 import javafx.scene.layout.VBox;
 import javafx.geometry.Pos;
@@ -63,7 +62,11 @@ public class LoginView extends VBox {
             boolean authenticated = bankingService.authenticate(username, password);
 
             if (authenticated) {
-                messageLabel.setText("Login Successful");
+                DashboardView dashboardView = new DashboardView(bankingService, stage);
+
+                Scene dashboardScene = new Scene(dashboardView, 500, 300);
+
+                stage.setScene(dashboardScene);
             } else {
                 messageLabel.setText("Invalid Username or Password!");
             }
