@@ -1,7 +1,12 @@
 package com.prathamesh.ui;
 
 import com.prathamesh.service.BankingService;
+import com.prathamesh.model.Transaction;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
+
+import javafx.application.Platform;
 import javafx.stage.Stage;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -20,6 +25,7 @@ public class DashboardView extends VBox {
     private final BankingService bankingService;
     private final Stage stage;
     private double balance = 0.0;
+    private final List<Transaction> transactions = new ArrayList<>();
 
     /**
      * Creates the dashboard screen.
@@ -35,6 +41,13 @@ public class DashboardView extends VBox {
         // Balance display
         Label balanceLabel = new Label("Current Balance: ₹0.00");
         balanceLabel.setFont(new Font(18));
+
+        // Transaction history label
+        Label transactionHistoryLabel = new Label("Transaction History:");
+        transactionHistoryLabel.setFont(new Font(18));
+
+        // Transaction history display
+        Label historyContentLabel = new Label("No transactions yet.");
 
         // Logout button
         Button logoutButton = new Button("Logout");
@@ -67,6 +80,9 @@ public class DashboardView extends VBox {
 
                 if(withdrawalAmount <= balance) {
                     balance -= withdrawalAmount;
+                    Transaction transaction = new Transaction("Withdraw", withdrawalAmount);
+                    transactions.add(transaction);
+                    historyContentLabel.setText(buildTransactionHistory());
                     balanceLabel.setText(String.format("Current Balance: ₹%.2f", balance));
                 } else {
                     Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -93,8 +109,16 @@ public class DashboardView extends VBox {
                 double depositAmount = Double.parseDouble(amount);
 
                 balance += depositAmount;
+                Transaction transaction = new Transaction("Deposit", depositAmount);
+                transactions.add(transaction);
+                historyContentLabel.setText(buildTransactionHistory());
                 balanceLabel.setText(String.format("Current Balance: %.2f", balance));
             });
+        });
+
+        // Handle logout button click
+        logoutButton.setOnAction(event -> {
+            Platform.exit();
         });
 
         // Layout configuration
@@ -106,9 +130,24 @@ public class DashboardView extends VBox {
         getChildren().addAll(
                 titleLabel,
                 balanceLabel,
+                transactionHistoryLabel,
+                historyContentLabel,
                 depositButton,
                 withdrawButton,
                 logoutButton
         );
+    }
+
+    private String buildTransactionHistory() {
+
+        StringBuilder history = new StringBuilder();
+
+        for(Transaction transaction : transactions) {
+            history.append(transaction.getType());
+            history.append(": ₹");
+            history.append(String.format("%.2f", transaction.getAmount()));
+            history.append("\n");
+        }
+        return history.toString();
     }
 }

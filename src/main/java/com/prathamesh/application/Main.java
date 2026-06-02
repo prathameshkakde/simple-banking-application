@@ -3,6 +3,7 @@ package com.prathamesh.application;
 import com.prathamesh.ui.LoginView;
 import com.prathamesh.service.BankingService;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
