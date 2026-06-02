@@ -8,6 +8,7 @@ import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextInputDialog;
+import javafx.scene.control.Alert;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 
@@ -28,14 +29,8 @@ public class DashboardView extends VBox {
         this.stage = stage;
 
         // Dashboard title
-        Label titleLabel =
-                new Label(
-                        "Welcome to Your Banking Dashboard"
-                );
-
-        titleLabel.setFont(
-                new Font(24)
-        );
+        Label titleLabel = new Label("Welcome to Your Banking Dashboard");
+        titleLabel.setFont(new Font(24));
 
         // Balance display
         Label balanceLabel = new Label("Current Balance: ₹0.00");
@@ -48,6 +43,40 @@ public class DashboardView extends VBox {
         // Deposit button
         Button depositButton = new Button("Deposit");
         depositButton.setPrefWidth(250);
+
+        // Withdraw button
+        Button withdrawButton = new Button("Withdraw");
+        withdrawButton.setPrefWidth(250);
+
+        // Handle withdraw button click
+        withdrawButton.setOnAction(event -> {
+
+            TextInputDialog dialog = new TextInputDialog();
+
+            dialog.setTitle("Withdraw Money");
+
+            dialog.setHeaderText(null);
+
+            dialog.setContentText("Enter withdraw amount:");
+
+            Optional<String> result = dialog.showAndWait();
+
+            result.ifPresent(amount -> {
+
+                double withdrawalAmount = Double.parseDouble(amount);
+
+                if(withdrawalAmount <= balance) {
+                    balance -= withdrawalAmount;
+                    balanceLabel.setText(String.format("Current Balance: ₹%.2f", balance));
+                } else {
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("Insufficient Funds");
+                    alert.setHeaderText(null);
+                    alert.setContentText("You cannot withdraw more than your available balance.");
+                    alert.showAndWait();
+                }
+            });
+        });
 
         // Handle deposit button click
         depositButton.setOnAction(event -> {
@@ -78,6 +107,7 @@ public class DashboardView extends VBox {
                 titleLabel,
                 balanceLabel,
                 depositButton,
+                withdrawButton,
                 logoutButton
         );
     }
