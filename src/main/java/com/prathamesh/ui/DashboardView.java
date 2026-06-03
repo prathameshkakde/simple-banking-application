@@ -10,6 +10,7 @@ import javafx.application.Platform;
 import javafx.stage.Stage;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextInputDialog;
@@ -49,13 +50,31 @@ public class DashboardView extends VBox {
         // Transaction history display
         Label historyContentLabel = new Label("No transactions yet.");
 
-        // Logout button
-        Button logoutButton = new Button("Logout");
-        logoutButton.setPrefWidth(250);
-
         // Deposit button
         Button depositButton = new Button("Deposit");
         depositButton.setPrefWidth(250);
+
+        // Handle deposit button click
+        depositButton.setOnAction(event -> {
+
+            TextInputDialog dialog = new TextInputDialog();
+            dialog.setTitle("Deposit Money");
+            dialog.setHeaderText(null);
+            dialog.setContentText("Enter Your Deposit Amount");
+
+            Optional<String> result = dialog.showAndWait();
+
+            result.ifPresent(amount -> {
+
+                double depositAmount = Double.parseDouble(amount);
+
+                balance += depositAmount;
+                Transaction transaction = new Transaction("Deposit", depositAmount);
+                transactions.add(transaction);
+                historyContentLabel.setText(buildTransactionHistory());
+                balanceLabel.setText(String.format("Current Balance: %.2f", balance));
+            });
+        });
 
         // Withdraw button
         Button withdrawButton = new Button("Withdraw");
@@ -94,31 +113,18 @@ public class DashboardView extends VBox {
             });
         });
 
-        // Handle deposit button click
-        depositButton.setOnAction(event -> {
-
-            TextInputDialog dialog = new TextInputDialog();
-            dialog.setTitle("Deposit Money");
-            dialog.setHeaderText(null);
-            dialog.setContentText("Enter Your Deposit Amount");
-
-            Optional<String> result = dialog.showAndWait();
-
-            result.ifPresent(amount -> {
-
-                double depositAmount = Double.parseDouble(amount);
-
-                balance += depositAmount;
-                Transaction transaction = new Transaction("Deposit", depositAmount);
-                transactions.add(transaction);
-                historyContentLabel.setText(buildTransactionHistory());
-                balanceLabel.setText(String.format("Current Balance: %.2f", balance));
-            });
-        });
+        // Logout button
+        Button logoutButton = new Button("Logout");
+        logoutButton.setPrefWidth(250);
 
         // Handle logout button click
         logoutButton.setOnAction(event -> {
-            Platform.exit();
+
+            LoginView loginView = new LoginView(bankingService, stage);
+
+            Scene loginScene = new Scene(loginView, 400, 300);
+
+            stage.setScene(loginScene);
         });
 
         // Layout configuration
