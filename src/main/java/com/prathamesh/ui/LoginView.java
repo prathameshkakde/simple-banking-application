@@ -62,6 +62,10 @@ public class LoginView extends VBox {
             boolean authenticated = bankingService.authenticate(username, password);
 
             if (authenticated) {
+
+                // Store currently logged-in account
+                bankingService.setCurrentAccount(bankingService.findAccountByUsername(username));
+
                 DashboardView dashboardView = new DashboardView(bankingService, stage);
 
                 Scene dashboardScene = new Scene(dashboardView, 500, 300);

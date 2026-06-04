@@ -13,11 +13,15 @@ public class BankingService {
     // Stores all accounts in memory
     private List<Account> accounts;
 
+    // Currently logged-in account
+    private Account currentAccount;
+
     /**
      * Creates the banking service.
      */
     public BankingService() {
         this.accounts = new ArrayList<>();
+        this.currentAccount = null;
     }
 
     /**
@@ -27,6 +31,24 @@ public class BankingService {
      */
     public List<Account> getAccounts() {
         return accounts;
+    }
+
+    /**
+     * Returns the currently logged-in account.
+     *
+     * @return current account
+     */
+    public Account getCurrentAccount() {
+        return currentAccount;
+    }
+
+    /**
+     * Sets the currently logged-in account.
+     *
+     * @param currentAccount account to set
+     */
+    public void setCurrentAccount(Account currentAccount) {
+        this.currentAccount = currentAccount;
     }
 
     /**

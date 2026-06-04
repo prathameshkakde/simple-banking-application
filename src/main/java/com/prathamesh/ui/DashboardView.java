@@ -2,11 +2,9 @@ package com.prathamesh.ui;
 
 import com.prathamesh.service.BankingService;
 import com.prathamesh.model.Transaction;
-import java.util.ArrayList;
-import java.util.List;
+
 import java.util.Optional;
 
-import javafx.application.Platform;
 import javafx.stage.Stage;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -25,8 +23,6 @@ public class DashboardView extends VBox {
 
     private final BankingService bankingService;
     private final Stage stage;
-    private double balance = 0.0;
-    private final List<Transaction> transactions = new ArrayList<>();
 
     /**
      * Creates the dashboard screen.
@@ -40,7 +36,7 @@ public class DashboardView extends VBox {
         titleLabel.setFont(new Font(24));
 
         // Balance display
-        Label balanceLabel = new Label("Current Balance: ₹0.00");
+        Label balanceLabel = new Label(String.format("Current Balance: ₹%.2f", bankingService.getCurrentAccount().getBalance()));
         balanceLabel.setFont(new Font(18));
 
         // Transaction history label
@@ -49,6 +45,7 @@ public class DashboardView extends VBox {
 
         // Transaction history display
         Label historyContentLabel = new Label("No transactions yet.");
+        historyContentLabel.setText(buildTransactionHistory());
 
         // Deposit button
         Button depositButton = new Button("Deposit");
@@ -66,13 +63,28 @@ public class DashboardView extends VBox {
 
             result.ifPresent(amount -> {
 
-                double depositAmount = Double.parseDouble(amount);
+                double depositAmount =
+                        Double.parseDouble(amount);
 
-                balance += depositAmount;
-                Transaction transaction = new Transaction("Deposit", depositAmount);
-                transactions.add(transaction);
-                historyContentLabel.setText(buildTransactionHistory());
-                balanceLabel.setText(String.format("Current Balance: %.2f", balance));
+                bankingService.deposit(
+                        bankingService
+                                .getCurrentAccount()
+                                .getUsername(),
+                        depositAmount
+                );
+
+                historyContentLabel.setText(
+                        buildTransactionHistory()
+                );
+
+                balanceLabel.setText(
+                        String.format(
+                                "Current Balance: ₹%.2f",
+                                bankingService
+                                        .getCurrentAccount()
+                                        .getBalance()
+                        )
+                );
             });
         });
 
@@ -97,17 +109,47 @@ public class DashboardView extends VBox {
 
                 double withdrawalAmount = Double.parseDouble(amount);
 
-                if(withdrawalAmount <= balance) {
-                    balance -= withdrawalAmount;
-                    Transaction transaction = new Transaction("Withdraw", withdrawalAmount);
-                    transactions.add(transaction);
-                    historyContentLabel.setText(buildTransactionHistory());
-                    balanceLabel.setText(String.format("Current Balance: ₹%.2f", balance));
+                if (
+                        bankingService.withdraw(
+                                bankingService
+                                        .getCurrentAccount()
+                                        .getUsername(),
+                                withdrawalAmount
+                        )
+                ) {
+
+                    historyContentLabel.setText(
+                            buildTransactionHistory()
+                    );
+
+                    balanceLabel.setText(
+                            String.format(
+                                    "Current Balance: ₹%.2f",
+                                    bankingService
+                                            .getCurrentAccount()
+                                            .getBalance()
+                            )
+                    );
+
                 } else {
-                    Alert alert = new Alert(Alert.AlertType.ERROR);
-                    alert.setTitle("Insufficient Funds");
-                    alert.setHeaderText(null);
-                    alert.setContentText("You cannot withdraw more than your available balance.");
+
+                    Alert alert =
+                            new Alert(
+                                    Alert.AlertType.ERROR
+                            );
+
+                    alert.setTitle(
+                            "Insufficient Funds"
+                    );
+
+                    alert.setHeaderText(
+                            null
+                    );
+
+                    alert.setContentText(
+                            "You cannot withdraw more than your available balance."
+                    );
+
                     alert.showAndWait();
                 }
             });
@@ -146,14 +188,36 @@ public class DashboardView extends VBox {
 
     private String buildTransactionHistory() {
 
-        StringBuilder history = new StringBuilder();
+        StringBuilder history =
+                new StringBuilder();
 
-        for(Transaction transaction : transactions) {
-            history.append(transaction.getType());
-            history.append(": ₹");
-            history.append(String.format("%.2f", transaction.getAmount()));
-            history.append("\n");
+        for (
+                Transaction transaction :
+                bankingService
+                        .getCurrentAccount()
+                        .getTransactions()
+        ) {
+
+            history.append(
+                    transaction.getType()
+            );
+
+            history.append(
+                    ": ₹"
+            );
+
+            history.append(
+                    String.format(
+                            "%.2f",
+                            transaction.getAmount()
+                    )
+            );
+
+            history.append(
+                    "\n"
+            );
         }
+
         return history.toString();
     }
 }
