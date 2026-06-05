@@ -2,6 +2,7 @@ package com.prathamesh.service;
 
 import com.prathamesh.model.Account;
 import com.prathamesh.model.Transaction;
+import com.prathamesh.storage.FileStorageService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,12 +17,16 @@ public class BankingService {
     // Currently logged-in account
     private Account currentAccount;
 
+    private FileStorageService fileStorageService;
+
     /**
      * Creates the banking service.
      */
     public BankingService() {
         this.accounts = new ArrayList<>();
         this.currentAccount = null;
+        this.fileStorageService =   new FileStorageService();
+        this.accounts = fileStorageService.loadAccounts();
     }
 
     /**
@@ -73,6 +78,11 @@ public class BankingService {
 
         // Store account
         accounts.add(account);
+
+        // Save account to file
+        fileStorageService.saveAccount(
+                account
+        );
 
         return true;
     }

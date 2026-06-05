@@ -1,10 +1,13 @@
 package com.prathamesh.storage;
 
+import com.prathamesh.model.Account;
+
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.BufferedReader;
 import java.io.FileReader;
-import com.prathamesh.model.Account;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Handles saving and loading banking data.
@@ -89,7 +92,8 @@ public class FileStorageService {
      * Loads and prints account objects
      * from the storage file.
      */
-    public void loadAccounts() {
+    public List<Account> loadAccounts() {
+        List<Account> accounts = new ArrayList<>();
 
         try (BufferedReader reader =
                 new BufferedReader(
@@ -113,6 +117,7 @@ public class FileStorageService {
 
                 // Create Account object
                 Account account = new Account(username, password, balance);
+                accounts.add(account);
 
                 // Display loaded account
                 System.out.println("Loaded Account -> " + account.getUsername() + ", Balance: " + account.getBalance());
@@ -121,5 +126,6 @@ public class FileStorageService {
 
             exception.printStackTrace();
         }
+        return accounts;
     }
 }
