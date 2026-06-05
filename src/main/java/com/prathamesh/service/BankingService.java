@@ -146,6 +146,7 @@ public class BankingService {
 
         // Record transaction
         account.addTransaction(new Transaction("Deposit", amount));
+        fileStorageService.saveAllAccounts(accounts);
 
         return true;
     }
@@ -180,6 +181,7 @@ public class BankingService {
 
         // Record transaction
         account.addTransaction(new Transaction("Withdraw", amount));
+        fileStorageService.saveAllAccounts(accounts);
 
         return true;
     }

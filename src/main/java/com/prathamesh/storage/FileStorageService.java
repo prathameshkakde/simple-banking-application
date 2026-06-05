@@ -128,4 +128,33 @@ public class FileStorageService {
         }
         return accounts;
     }
+
+    /**
+     * Saves all accounts to the storage file.
+     *
+     * @param accounts accounts to save
+     */
+    public void saveAllAccounts(
+            List<Account> accounts
+    ) {
+
+        try (
+                FileWriter writer = new FileWriter("data/accounts.txt")
+        ) {
+
+            for (Account account : accounts) {
+                writer.write(
+                        account.getUsername()
+                                + ","
+                                + account.getPassword()
+                                + ","
+                                + account.getBalance()
+                                + System.lineSeparator()
+                );
+            }
+
+        } catch (IOException exception) {
+            exception.printStackTrace();
+        }
+    }
 }
