@@ -4,8 +4,11 @@ import com.prathamesh.model.Account;
 import com.prathamesh.model.Transaction;
 import com.prathamesh.storage.FileStorageService;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.time.LocalDateTime;
+import java.util.Locale;
 
 /**
  * Handles banking operations and account storage.
@@ -27,6 +30,19 @@ public class BankingService {
         this.currentAccount = null;
         this.fileStorageService =   new FileStorageService();
         this.accounts = fileStorageService.loadAccounts();
+
+        // Load transaction history
+        for(String[] transactionData : fileStorageService.loadTransactions()) {
+
+            String username = transactionData[0];
+            String type = transactionData[1];
+            double amount = Double.parseDouble(transactionData[2]);
+            LocalDateTime timestamp = LocalDateTime.parse(transactionData[3]);
+            Account account = findAccountByUsername(username);
+            if(account != null) {
+                account.addTransaction(new Transaction(type, amount, timestamp));
+            }
+        }
     }
 
     /**
@@ -145,7 +161,9 @@ public class BankingService {
         account.setBalance(account.getBalance() + amount);
 
         // Record transaction
-        account.addTransaction(new Transaction("Deposit", amount));
+        Transaction transaction = new Transaction("Deposit", amount);
+        account.addTransaction(transaction);
+        fileStorageService.saveTransaction(username, transaction);
         fileStorageService.saveAllAccounts(accounts);
 
         return true;
@@ -180,7 +198,12 @@ public class BankingService {
         account.setBalance(account.getBalance() - amount);
 
         // Record transaction
-        account.addTransaction(new Transaction("Withdraw", amount));
+        Transaction transaction = new Transaction("Withdraw", amount);
+
+        account.addTransaction(transaction);
+
+        // Persist transaction
+        fileStorageService.saveTransaction(username, transaction);
         fileStorageService.saveAllAccounts(accounts);
 
         return true;

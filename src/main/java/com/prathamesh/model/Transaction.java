@@ -30,6 +30,19 @@ public class Transaction {
         this.timestamp = LocalDateTime.now();
     }
 
+    /**
+     * Creates a transaction using an existing timestamp.
+     *
+     * @param type transaction type
+     * @param amount transaction amount
+     * @param timestamp original timestamp
+     */
+    public Transaction(String type, double amount, LocalDateTime timestamp) {
+        this.type = type;
+        this.amount = amount;
+        this.timestamp = timestamp;
+    }
+
     // Getter for type
     public String getType() {
         return type;

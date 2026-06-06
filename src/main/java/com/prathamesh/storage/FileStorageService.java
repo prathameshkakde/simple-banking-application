@@ -1,6 +1,7 @@
 package com.prathamesh.storage;
 
 import com.prathamesh.model.Account;
+import com.prathamesh.model.Transaction;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -8,6 +9,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.time.LocalDateTime;
 
 /**
  * Handles saving and loading banking data.
@@ -60,6 +62,22 @@ public class FileStorageService {
 
         } catch (IOException exception) {
 
+            exception.printStackTrace();
+        }
+    }
+
+    public void saveTransaction(String username, Transaction transaction) {
+        try (FileWriter writer = new FileWriter("data/transactions.txt", true)) {
+            writer.write(username
+                    + ","
+                    + transaction.getType()
+                    + ","
+                    + transaction.getAmount()
+                    + ","
+                    + transaction.getTimestamp()
+                    + System.lineSeparator()
+            );
+        } catch (IOException exception) {
             exception.printStackTrace();
         }
     }
@@ -127,6 +145,26 @@ public class FileStorageService {
             exception.printStackTrace();
         }
         return accounts;
+    }
+
+    /**
+     * Loads transactions from the transaction file.
+     *
+     * @return list of transactions
+     */
+    public List<String[]> loadTransactions() {
+        List<String[]> transactions = new ArrayList<>();
+
+        try (BufferedReader reader = new BufferedReader(new FileReader("data/transactions.txt"))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                transactions.add(line.split(","));
+            }
+        } catch (IOException exception) {
+            exception.printStackTrace();
+        }
+
+        return transactions;
     }
 
     /**
