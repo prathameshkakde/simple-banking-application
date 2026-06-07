@@ -62,9 +62,24 @@ public class DashboardView extends VBox {
             Optional<String> result = dialog.showAndWait();
 
             result.ifPresent(amount -> {
+                if (amount.trim().isEmpty()) {
+                    showError("Empty Amount", "Amount cannot be empty.");
+                    return;
+                }
 
-                double depositAmount =
-                        Double.parseDouble(amount);
+                double depositAmount;
+
+                try {
+                    depositAmount = Double.parseDouble(amount);
+                } catch (NumberFormatException exception) {
+                    showError("Invalid Amount", "Please enter a valid number.");
+                    return;
+                }
+
+                if (depositAmount <= 0) {
+                    showError("Invalid Amount", "Amount must be greater than zero.");
+                    return;
+                }
 
                 bankingService.deposit(
                         bankingService
@@ -106,8 +121,24 @@ public class DashboardView extends VBox {
             Optional<String> result = dialog.showAndWait();
 
             result.ifPresent(amount -> {
+                if (amount.trim().isEmpty()) {
+                    showError("Empty Amount", "Amount cannot be empty.");
+                    return;
+                }
 
-                double withdrawalAmount = Double.parseDouble(amount);
+                double withdrawalAmount;
+
+                try {
+                    withdrawalAmount = Double.parseDouble(amount);
+                } catch (NumberFormatException exception) {
+                    showError("Invalid Amount", "Please enter a valid number.");
+                    return;
+                }
+
+                if (withdrawalAmount <= 0) {
+                    showError("Invalid Amount", "Amount must be greater than zero.");
+                    return;
+                }
 
                 if (
                         bankingService.withdraw(
@@ -132,25 +163,7 @@ public class DashboardView extends VBox {
                     );
 
                 } else {
-
-                    Alert alert =
-                            new Alert(
-                                    Alert.AlertType.ERROR
-                            );
-
-                    alert.setTitle(
-                            "Insufficient Funds"
-                    );
-
-                    alert.setHeaderText(
-                            null
-                    );
-
-                    alert.setContentText(
-                            "You cannot withdraw more than your available balance."
-                    );
-
-                    alert.showAndWait();
+                    showError("Insufficient Funds", "You cannot withdraw more than your available balance.");
                 }
             });
         });
@@ -219,5 +232,19 @@ public class DashboardView extends VBox {
         }
 
         return history.toString();
+    }
+
+    /**
+     * Displays an error dialog.
+     *
+     * @param title alert title
+     * @param message alert message
+     */
+    private void showError(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
 }
