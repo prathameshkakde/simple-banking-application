@@ -4,6 +4,7 @@ import com.prathamesh.service.BankingService;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
@@ -11,7 +12,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
-import javafx.scene.Scene;
 
 /**
  * Represents the registration screen UI.
@@ -19,7 +19,6 @@ import javafx.scene.Scene;
 public class RegisterView extends VBox {
 
     private final BankingService bankingService;
-
     private final Stage stage;
 
     /**
@@ -32,85 +31,76 @@ public class RegisterView extends VBox {
 
         // Title
         Label titleLabel = new Label("Create a New Account");
-        titleLabel.setFont(new Font(24));
+        titleLabel.setFont(new Font(28));
 
         // Registration feedback
         Label messageLabel = new Label();
 
-        // Username field
+        // Username
         TextField usernameField = new TextField();
         usernameField.setPromptText("Enter username");
-        usernameField.setPrefWidth(250);
+        usernameField.setPrefWidth(300);
 
-        // Password field
+        // Password
         PasswordField passwordField = new PasswordField();
         passwordField.setPromptText("Enter password");
-        passwordField.setPrefWidth(250);
+        passwordField.setPrefWidth(300);
 
         // Register button
         Button registerButton = new Button("Register");
-        registerButton.setPrefWidth(250);
+        registerButton.setPrefWidth(300);
 
-        // Handle registration
         registerButton.setOnAction(event -> {
 
-            String username =
-                    usernameField.getText();
+            String username = usernameField.getText();
+            String password = passwordField.getText();
 
-            String password =
-                    passwordField.getText();
-
-            boolean created =
-                    bankingService.createAccount(
-                            username,
-                            password
-                    );
+            boolean created = bankingService.createAccount(username, password);
 
             if (created) {
-
-                messageLabel.setText(
-                        "Account Created Successfully!"
-                );
-
+                messageLabel.setText("Account Created Successfully!");
             } else {
-
-                messageLabel.setText(
-                        "Username Already Exists!"
-                );
+                messageLabel.setText("Username Already Exists!");
             }
         });
 
-        // Navigate back to login screen
+        // Back button
         Button backToLoginButton = new Button("Back to Login");
-        backToLoginButton.setPrefWidth(250);
+        backToLoginButton.setPrefWidth(300);
 
-        // Navigate back to login screen
         backToLoginButton.setOnAction(event -> {
 
-            LoginView loginView =
-                    new LoginView(
-                            bankingService,
-                            stage
-                    );
-
-            Scene loginScene =
-                    new Scene(
-                            loginView,
-                            400,
-                            300
-                    );
-
-            stage.setScene(
-                    loginScene
-            );
+            LoginView loginView = new LoginView(bankingService, stage);
+            VBox root = new VBox(loginView);
+            root.setAlignment(Pos.CENTER);
+            root.setStyle("-fx-background-color: #F5F5F5;");
+            Scene loginScene = new Scene(root, 700, 500);
+            stage.setScene(loginScene);
         });
 
-        // Layout configuration
-        setSpacing(15);
-        setPadding(new Insets(20));
+        // Layout
+        setSpacing(20);
+        setPadding(new Insets(40));
         setAlignment(Pos.CENTER);
 
-        // Add components
-        getChildren().addAll(titleLabel,usernameField,passwordField,registerButton, backToLoginButton, messageLabel);
+        setMaxWidth(350);
+
+        setStyle(
+                "-fx-background-color: white;" +
+                        "-fx-background-radius: 10;" +
+                        "-fx-border-radius: 10;" +
+                        "-fx-border-color: #DDDDDD;" +
+                        "-fx-border-width: 1;" +
+                        "-fx-padding: 30;"
+        );
+
+        getChildren().addAll(
+                titleLabel,
+                usernameField,
+                passwordField,
+                registerButton,
+                backToLoginButton,
+                messageLabel
+        );
     }
 }

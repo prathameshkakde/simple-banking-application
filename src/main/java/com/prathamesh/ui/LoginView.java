@@ -26,13 +26,12 @@ public class LoginView extends VBox {
      * Creates the login screen.
      */
     public LoginView(BankingService bankingService, Stage stage) {
-
         this.bankingService = bankingService;
         this.stage = stage;
 
         // Create title label
         Label title = new Label("Simple Banking Application");
-        title.setFont(new Font(20));
+        title.setFont(new Font(28));
 
         // Message label for login feedback
         Label messageLabel = new Label();
@@ -49,11 +48,10 @@ public class LoginView extends VBox {
 
         // Login button
         Button loginButton = new Button("Login");
-        loginButton.setPrefWidth(250);
+        loginButton.setPrefWidth(300);
 
         // Handle button click
         loginButton.setOnAction(event -> {
-
             // Read values form fields
             String username = usernameField.getText();
             String password = passwordField.getText();
@@ -62,14 +60,15 @@ public class LoginView extends VBox {
             boolean authenticated = bankingService.authenticate(username, password);
 
             if (authenticated) {
-
                 // Store currently logged-in account
                 bankingService.setCurrentAccount(bankingService.findAccountByUsername(username));
 
                 DashboardView dashboardView = new DashboardView(bankingService, stage);
 
-                Scene dashboardScene = new Scene(dashboardView, 500, 300);
-
+                VBox root = new VBox(dashboardView);
+                root.setAlignment(Pos.CENTER);
+                root.setStyle("-fx-background-color: #F5F5F5;");
+                Scene dashboardScene = new Scene(root, 700, 500);
                 stage.setScene(dashboardScene);
             } else {
                 messageLabel.setText("Invalid Username or Password!");
@@ -78,24 +77,35 @@ public class LoginView extends VBox {
 
         // Navigate to registration screen
         Button createAccountButton = new Button("Create Account");
-        createAccountButton.setPrefWidth(250);
+        createAccountButton.setPrefWidth(300);
 
         // Navigate to registration screen
         createAccountButton.setOnAction(event -> {
 
             RegisterView registerView = new RegisterView(bankingService, stage);
-
-            Scene registerScene = new Scene(registerView, 400, 300);
-
+            VBox root = new VBox(registerView);
+            root.setAlignment(Pos.CENTER);
+            root.setStyle("-fx-background-color: #F5F5F5;");
+            Scene registerScene = new Scene(root, 700, 500);
             stage.setScene(registerScene);
         });
 
         // Configure layout spacing
-        setSpacing(15);
-        setPadding(new Insets(20));
+        setSpacing(20);
+        setPadding(new Insets(40));
 
-        // Center all components
         setAlignment(Pos.CENTER);
+        setMaxWidth(350);
+
+        // Modern card styling
+        setStyle(
+                "-fx-background-color: white;" +
+                        "-fx-background-radius: 10;" +
+                        "-fx-border-radius: 10;" +
+                        "-fx-padding: 30;" +
+                        "-fx-border-color: #DDDDDD;" +
+                        "-fx-border-width: 1;"
+        );
 
         // Add all components to VBox
         getChildren().addAll(title, usernameField, passwordField, loginButton, createAccountButton, messageLabel);

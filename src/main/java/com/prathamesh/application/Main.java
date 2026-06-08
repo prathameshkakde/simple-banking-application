@@ -3,8 +3,9 @@ package com.prathamesh.application;
 import com.prathamesh.ui.LoginView;
 import com.prathamesh.service.BankingService;
 import javafx.application.Application;
-import javafx.application.Platform;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 /**
@@ -20,9 +21,10 @@ public class Main extends Application {
 
         // Create login screen
         LoginView loginView = new LoginView(bankingService, stage);
-
-        // Create scene
-        Scene scene = new Scene(loginView, 400, 300);
+        VBox root = new VBox(loginView);
+        root.setAlignment(Pos.CENTER);
+        root.setStyle("-fx-background-color: #F5F5F5;");
+        Scene scene = new Scene(root, 700, 500);
 
         // Configure stage
         stage.setTitle("Simple Banking Application");

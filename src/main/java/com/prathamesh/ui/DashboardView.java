@@ -33,7 +33,7 @@ public class DashboardView extends VBox {
 
         // Dashboard title
         Label titleLabel = new Label("Welcome to Your Banking Dashboard");
-        titleLabel.setFont(new Font(24));
+        titleLabel.setFont(new Font(28));
 
         // Balance display
         Label balanceLabel = new Label(String.format("Current Balance: ₹%.2f", bankingService.getCurrentAccount().getBalance()));
@@ -41,7 +41,7 @@ public class DashboardView extends VBox {
 
         // Transaction history label
         Label transactionHistoryLabel = new Label("Transaction History:");
-        transactionHistoryLabel.setFont(new Font(18));
+        transactionHistoryLabel.setFont(new Font(20));
 
         // Transaction history display
         Label historyContentLabel = new Label("No transactions yet.");
@@ -49,7 +49,7 @@ public class DashboardView extends VBox {
 
         // Deposit button
         Button depositButton = new Button("Deposit");
-        depositButton.setPrefWidth(250);
+        depositButton.setPrefWidth(300);
 
         // Handle deposit button click
         depositButton.setOnAction(event -> {
@@ -81,23 +81,11 @@ public class DashboardView extends VBox {
                     return;
                 }
 
-                bankingService.deposit(
-                        bankingService
-                                .getCurrentAccount()
-                                .getUsername(),
-                        depositAmount
-                );
+                bankingService.deposit(bankingService.getCurrentAccount().getUsername(), depositAmount);
 
-                historyContentLabel.setText(
-                        buildTransactionHistory()
-                );
+                historyContentLabel.setText(buildTransactionHistory());
 
-                balanceLabel.setText(
-                        String.format(
-                                "Current Balance: ₹%.2f",
-                                bankingService
-                                        .getCurrentAccount()
-                                        .getBalance()
+                balanceLabel.setText(String.format("Current Balance: ₹%.2f", bankingService.getCurrentAccount().getBalance()
                         )
                 );
             });
@@ -105,7 +93,7 @@ public class DashboardView extends VBox {
 
         // Withdraw button
         Button withdrawButton = new Button("Withdraw");
-        withdrawButton.setPrefWidth(250);
+        withdrawButton.setPrefWidth(300);
 
         // Handle withdraw button click
         withdrawButton.setOnAction(event -> {
@@ -141,11 +129,7 @@ public class DashboardView extends VBox {
                 }
 
                 if (
-                        bankingService.withdraw(
-                                bankingService
-                                        .getCurrentAccount()
-                                        .getUsername(),
-                                withdrawalAmount
+                        bankingService.withdraw(bankingService.getCurrentAccount().getUsername(), withdrawalAmount
                         )
                 ) {
 
@@ -170,22 +154,32 @@ public class DashboardView extends VBox {
 
         // Logout button
         Button logoutButton = new Button("Logout");
-        logoutButton.setPrefWidth(250);
+        logoutButton.setPrefWidth(300);
 
         // Handle logout button click
         logoutButton.setOnAction(event -> {
 
             LoginView loginView = new LoginView(bankingService, stage);
-
-            Scene loginScene = new Scene(loginView, 400, 300);
-
+            VBox root = new VBox(loginView);
+            root.setAlignment(Pos.CENTER);
+            root.setStyle("-fx-background-color: #F5F5F5;");
+            Scene loginScene = new Scene(root, 700, 500);
             stage.setScene(loginScene);
         });
 
         // Layout configuration
-        setSpacing(20);
-        setPadding(new Insets(20));
+        setSpacing(25);
+        setPadding(new Insets(40));
         setAlignment(Pos.CENTER);
+        setMaxWidth(450);
+        setStyle(
+                "-fx-background-color: white;" +
+                        "-fx-background-radius: 10;" +
+                        "-fx-border-radius: 10;" +
+                        "-fx-border-color: #DDDDDD;" +
+                        "-fx-border-width: 1;" +
+                        "-fx-padding: 30;"
+        );
 
         // Add components
         getChildren().addAll(
@@ -205,19 +199,10 @@ public class DashboardView extends VBox {
                 new StringBuilder();
 
         for (
-                Transaction transaction :
-                bankingService
-                        .getCurrentAccount()
-                        .getTransactions()
+                Transaction transaction : bankingService.getCurrentAccount().getTransactions()
         ) {
-
-            history.append(
-                    transaction.getType()
-            );
-
-            history.append(
-                    ": ₹"
-            );
+            history.append(transaction.getType());
+            history.append(": ₹");
 
             history.append(
                     String.format(
@@ -226,9 +211,7 @@ public class DashboardView extends VBox {
                     )
             );
 
-            history.append(
-                    "\n"
-            );
+            history.append("\n");
         }
 
         return history.toString();
