@@ -75,6 +75,7 @@ public class RegisterView extends VBox {
             root.setAlignment(Pos.CENTER);
             root.setStyle("-fx-background-color: #F5F5F5;");
             Scene loginScene = new Scene(root, 700, 500);
+            loginScene.getStylesheets().add(getClass().getResource("/styles/application.css").toExternalForm());
             stage.setScene(loginScene);
         });
 
@@ -82,17 +83,8 @@ public class RegisterView extends VBox {
         setSpacing(20);
         setPadding(new Insets(40));
         setAlignment(Pos.CENTER);
-
-        setMaxWidth(350);
-
-        setStyle(
-                "-fx-background-color: white;" +
-                        "-fx-background-radius: 10;" +
-                        "-fx-border-radius: 10;" +
-                        "-fx-border-color: #DDDDDD;" +
-                        "-fx-border-width: 1;" +
-                        "-fx-padding: 30;"
-        );
+        setMaxWidth(400);
+        getStyleClass().add("card");
 
         getChildren().addAll(
                 titleLabel,

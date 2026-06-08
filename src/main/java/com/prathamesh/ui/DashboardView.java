@@ -32,7 +32,7 @@ public class DashboardView extends VBox {
         this.stage = stage;
 
         // Dashboard title
-        Label titleLabel = new Label("Welcome to Your Banking Dashboard");
+        Label titleLabel = new Label("Banking Dashboard");
         titleLabel.setFont(new Font(28));
 
         // Balance display
@@ -40,7 +40,7 @@ public class DashboardView extends VBox {
         balanceLabel.setFont(new Font(18));
 
         // Transaction history label
-        Label transactionHistoryLabel = new Label("Transaction History:");
+        Label transactionHistoryLabel = new Label("Recent Transaction:");
         transactionHistoryLabel.setFont(new Font(20));
 
         // Transaction history display
@@ -164,6 +164,7 @@ public class DashboardView extends VBox {
             root.setAlignment(Pos.CENTER);
             root.setStyle("-fx-background-color: #F5F5F5;");
             Scene loginScene = new Scene(root, 700, 500);
+            loginScene.getStylesheets().add(getClass().getResource("/styles/application.css").toExternalForm());
             stage.setScene(loginScene);
         });
 
@@ -171,15 +172,8 @@ public class DashboardView extends VBox {
         setSpacing(25);
         setPadding(new Insets(40));
         setAlignment(Pos.CENTER);
-        setMaxWidth(450);
-        setStyle(
-                "-fx-background-color: white;" +
-                        "-fx-background-radius: 10;" +
-                        "-fx-border-radius: 10;" +
-                        "-fx-border-color: #DDDDDD;" +
-                        "-fx-border-width: 1;" +
-                        "-fx-padding: 30;"
-        );
+        setMaxWidth(500);
+        getStyleClass().add("card");
 
         // Add components
         getChildren().addAll(

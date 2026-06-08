@@ -25,6 +25,7 @@ public class Main extends Application {
         root.setAlignment(Pos.CENTER);
         root.setStyle("-fx-background-color: #F5F5F5;");
         Scene scene = new Scene(root, 700, 500);
+        scene.getStylesheets().add(getClass().getResource("/styles/application.css").toExternalForm());
 
         // Configure stage
         stage.setTitle("Simple Banking Application");

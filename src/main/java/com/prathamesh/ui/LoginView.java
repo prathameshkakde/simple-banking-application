@@ -30,7 +30,7 @@ public class LoginView extends VBox {
         this.stage = stage;
 
         // Create title label
-        Label title = new Label("Simple Banking Application");
+        Label title = new Label("Banking Application");
         title.setFont(new Font(28));
 
         // Message label for login feedback
@@ -69,6 +69,7 @@ public class LoginView extends VBox {
                 root.setAlignment(Pos.CENTER);
                 root.setStyle("-fx-background-color: #F5F5F5;");
                 Scene dashboardScene = new Scene(root, 700, 500);
+                dashboardScene.getStylesheets().add(getClass().getResource("/styles/application.css").toExternalForm());
                 stage.setScene(dashboardScene);
             } else {
                 messageLabel.setText("Invalid Username or Password!");
@@ -87,25 +88,16 @@ public class LoginView extends VBox {
             root.setAlignment(Pos.CENTER);
             root.setStyle("-fx-background-color: #F5F5F5;");
             Scene registerScene = new Scene(root, 700, 500);
+            registerScene.getStylesheets().add(getClass().getResource("/styles/application.css").toExternalForm());
             stage.setScene(registerScene);
         });
 
         // Configure layout spacing
         setSpacing(20);
         setPadding(new Insets(40));
-
         setAlignment(Pos.CENTER);
-        setMaxWidth(350);
-
-        // Modern card styling
-        setStyle(
-                "-fx-background-color: white;" +
-                        "-fx-background-radius: 10;" +
-                        "-fx-border-radius: 10;" +
-                        "-fx-padding: 30;" +
-                        "-fx-border-color: #DDDDDD;" +
-                        "-fx-border-width: 1;"
-        );
+        setMaxWidth(400);
+        getStyleClass().add("card");
 
         // Add all components to VBox
         getChildren().addAll(title, usernameField, passwordField, loginButton, createAccountButton, messageLabel);
